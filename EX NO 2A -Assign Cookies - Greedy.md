@@ -1,6 +1,6 @@
-# EX 3A N Queens Problem - Backtracking Approach.
+# EX 2A Assign Cookies using Greedy Algorithm.
 
-## DATE: 12-08-2026
+## DATE: 03-08-2026
 
 ### Developed By: PRAJIN S
 
@@ -8,100 +8,55 @@
 
 ## AIM:
 
-To Write a Java program for N queens using backtracking approach.  
-You are given an integer N. For a given N x N chessboard, find a way to place 'N' queens such that no queen can attack any other queen on the chessboard.  
-A queen can be attacked when it lies in the same row, column, or the same diagonal as any of the other queens.  
-You have to print one such configuration.
+To Write a Java program for the following Constraints.
+Assume you are an awesome parent and want to give your children some cookies. But, you should give each child at most one cookie.
 
-Chess Board  
-<img width="241" height="209" alt="image" src="https://github.com/user-attachments/assets/96aacb61-4f34-423f-b324-5e34454e42b8" />
-
-Note:
-
-- Get the input from the user for N. The value of N must be from 1 to 4.
-- If solution exists, print a binary matrix as output that has **1s** for the cells where queens are placed.
-- If there is no solution, print **"Solution does not exist"**.
+Each child i has a greed factor g[i], which is the minimum size of a cookie that the child will be content with; and each cookie j has a size s[j]. If s[j] >= g[i], we can assign the cookie j to the child i, and the child i will be content. Your goal is to maximise the number of your content children and output the maximum number.
 
 ## Algorithm
 
-1. Start with an empty NxN board and try to place queens column by column.
-2. For each column, try placing a queen in every row and check if the position is safe.
-3. A position is safe if there is no queen in the same row, upper-left diagonal, or lower-left diagonal.
-4. If placing a queen is valid, place it and recursively attempt to place queens in the next column.
-5. If no safe position is found in a column, backtrack and try the next possibility.
+1. Sort the children’s greed factors and cookie sizes in non-decreasing order.
+2. Use two pointers to try matching each child with the smallest possible cookie.
+3. Move the cookie pointer forward for every cookie checked.
+4. Increase the child pointer only when a cookie can satisfy that child’s greed.
+5. Return the total number of children successfully matched with cookies.
 
 ## Program:
 
 ```java
-import java.util.Scanner;
+import java.util.*;
 
-public class NQueens {
-    static int N;
+public class AssignCookies {
 
-    static void printSolution(int[][] board) {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                System.out.print(board[i][j] + " ");
-            }
-            System.out.println();
+    public static int findContentChildren(int[] g, int[] s) {
+        Arrays.sort(g);
+        Arrays.sort(s);
+
+        int i=0;
+        for(int j=0;i<g.length && j<s.length;j++){
+            if(g[i]<=s[j])i++;
         }
-    }
-
-    static boolean isSafe(int[][] board, int row, int col) {
-        for (int i = 0; i < col; i++)
-            if (board[row][i] == 1)
-                return false;
-
-        for (int i = row, j = col; i >= 0 && j >= 0; i--, j--)
-            if (board[i][j] == 1)
-                return false;
-
-        for (int i = row, j = col; i < N && j >= 0; i++, j--)
-            if (board[i][j] == 1)
-                return false;
-
-        return true;
-    }
-
-    static boolean solveNQUtil(int[][] board, int col) {
-        if (col >= N) return true;
-
-        for (int i = 0; i < N; i++) {
-            if (isSafe(board, i, col)) {
-                board[i][col] = 1;
-
-                if (solveNQUtil(board, col + 1)) return true;
-
-                board[i][col] = 0;
-            }
-        }
-        return false;
-    }
-
-    static boolean solveNQ() {
-        int[][] board = new int[N][N];
-
-        if (!solveNQUtil(board, 0)) {
-            System.out.println("Solution does not exist");
-            return false;
-        }
-
-        printSolution(board);
-        return true;
+        return i;
     }
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        N = scanner.nextInt();
-        solveNQ();
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] g = new int[n];
+        for (int i = 0; i < n; i++) g[i] = sc.nextInt();
+        int m = sc.nextInt();
+        int[] s = new int[m];
+        for (int i = 0; i < m; i++) s[i] = sc.nextInt();
+        System.out.println(findContentChildren(g, s));
     }
 }
+
 ```
 
 ## Output:
 
-<img width="638" height="275" alt="image" src="https://github.com/user-attachments/assets/d3e32f51-c91e-4663-9007-b58c34fc3787" />
+<img width="360" height="349" alt="image" src="https://github.com/user-attachments/assets/588167b3-0926-401c-b356-2bc3ced77f43" />
 
 ## Result:
 
-The program successfully implemented and the output is verified.
+The program successfully print all the numbers from 1 to N.
